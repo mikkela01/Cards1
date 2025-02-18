@@ -7,12 +7,20 @@
 
 import SwiftUI
 
-struct AngleExtensions: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+extension Angle: Codable {
+  enum CodingKeys: CodingKey {
+    case degrees
+  }
 
-#Preview {
-    AngleExtensions()
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let degrees = try container
+      .decode(Double.self, forKey: .degrees)
+    self.init(degrees: degrees)
+  }
+
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(degrees, forKey: .degrees)
+  }
 }

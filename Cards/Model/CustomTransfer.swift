@@ -7,12 +7,19 @@
 
 import SwiftUI
 
-struct CustomTransfer: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+struct CustomTransfer: Transferable {
+  var image: UIImage?
+  var text: String?
 
-#Preview {
-    CustomTransfer()
+  public static var transferRepresentation: some TransferRepresentation {
+    DataRepresentation(importedContentType: .image) { data in
+      let image = UIImage(data: data)
+        ?? UIImage(named: "error-image")
+      return CustomTransfer(image: image)
+    }
+    DataRepresentation(importedContentType: .text) { data in
+      let text = String(decoding: data, as: UTF8.self)
+      return CustomTransfer(text: text)
+    }
+  }
 }
